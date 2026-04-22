@@ -7,13 +7,20 @@ import compression from 'compression';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
-  // const logger = app.get('');
+  // const logger = app.get('NestApplication');
 
   app.enable('trust proxy');
-  app.enableCors();
+  app.enableCors({
+    origin: [
+      'http://localhost:3000',
+    ]
+  });
 
   app.use(helmet());
   app.use(compression());
+
+  // const { httpAdapter } = app.get(HttpAdapterHost);
+  app.enableShutdownHooks();
 
   const config = new DocumentBuilder()
     .setTitle('Side-Projects-BE')
@@ -23,7 +30,7 @@ async function bootstrap() {
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, documentFactory);
 
-  await app.listen(process.env.BACKEND_PORT || 4200);
+  await app.listen(process.env.BACKEND_PORT || 3001);
   console.log(`Listening on port ${process.env.BACKEND_PORT}`);
 }
 bootstrap();
