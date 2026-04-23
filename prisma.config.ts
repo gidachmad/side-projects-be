@@ -9,6 +9,7 @@ export default defineConfig({
     path: "prisma/migrations",
   },
   datasource: {
-    url: process.env.DATABASE_URL || "postgresql://localhost:5432/side_projects_db?schema=public&connection_limit=10&connect_timeout=0",
+    // url: process.env.DATABASE_URL || "postgresql://localhost:5432/side_projects_db?schema=public&connection_limit=10&connect_timeout=0",
+    url: process.env.DIRECT_URL || process.env.DATABASE_URL || "postgresql://localhost:5432/side_projects_db?schema=public&connection_limit=10&connect_timeout=0",
   },
 });

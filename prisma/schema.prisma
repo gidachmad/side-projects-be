@@ -1,11 +1,6 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider     = "prisma-client"
+  output       = "../generated/prisma"
   moduleFormat = "cjs"
 }
 
@@ -14,17 +9,42 @@ datasource db {
 }
 
 model UserAcademicRegistration {
-  id        Int      @id @default(autoincrement())
-  name      String
-  password  String
-  role      Role     @default(USER)
-
-  studentEnrollments EnrollmentAcademicRegistration[] @relation("StudentEnrollments")
-  lecturerApprovals  EnrollmentAcademicRegistration[] @relation("LecturerApprovals")
+  id                 Int                              @id @default(autoincrement())
+  name               String
+  password           String
+  role               Role                             @default(USER)
+  createdAt          DateTime                         @default(now())
+  updatedAt          DateTime                         @updatedAt
   lecturerCourses    CourseAcademicRegistration[]
+  lecturerApprovals  EnrollmentAcademicRegistration[] @relation("LecturerApprovals")
+  studentEnrollments EnrollmentAcademicRegistration[] @relation("StudentEnrollments")
+}
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model CourseAcademicRegistration {
+  id          Int                              @id @default(autoincrement())
+  name        String
+  code        String                           @unique
+  stock       Int
+  lecturerId  Int
+  createdAt   DateTime                         @default(now())
+  updatedAt   DateTime                         @updatedAt
+  lecturer    UserAcademicRegistration         @relation(fields: [lecturerId], references: [id])
+  enrollments EnrollmentAcademicRegistration[]
+}
+
+model EnrollmentAcademicRegistration {
+  id         Int                        @id @default(autoincrement())
+  studentId  Int
+  courseId   Int
+  lecturerId Int
+  status     EnrollmentStatus           @default(PENDING)
+  createdAt  DateTime                   @default(now())
+  updatedAt  DateTime                   @updatedAt
+  course     CourseAcademicRegistration @relation(fields: [courseId], references: [id])
+  lecturer   UserAcademicRegistration   @relation("LecturerApprovals", fields: [lecturerId], references: [id])
+  student    UserAcademicRegistration   @relation("StudentEnrollments", fields: [studentId], references: [id])
+
+  @@unique([studentId, courseId])
 }
 
 enum Role {
@@ -32,41 +52,8 @@ enum Role {
   LECTURER
 }
 
-model CourseAcademicRegistration {
-  id          Int      @id @default(autoincrement())
-  name        String
-  code        String   @unique
-  stock       Int
-
-  lecturerId Int
-  lecturer   UserAcademicRegistration @relation(fields: [lecturerId], references: [id])
-
-  enrollments EnrollmentAcademicRegistration[]
-
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-}
-
 enum EnrollmentStatus {
   PENDING
   APPROVED
   REJECTED
-}
-
-model EnrollmentAcademicRegistration {
-  id         Int      @id @default(autoincrement())
-  studentId  Int
-  courseId   Int
-  lecturerId Int
-
-  status     EnrollmentStatus @default(PENDING)
-
-  student  UserAcademicRegistration   @relation("StudentEnrollments", fields: [studentId], references: [id])
-  course   CourseAcademicRegistration @relation(fields: [courseId], references: [id])
-  lecturer UserAcademicRegistration   @relation("LecturerApprovals", fields: [lecturerId], references: [id])
-
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-
-  @@unique([studentId, courseId])
 }
