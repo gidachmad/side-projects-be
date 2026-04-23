@@ -26,6 +26,7 @@ async function bootstrap() {
     .setTitle('Side-Projects-BE')
     .setDescription('The side projects API description')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, documentFactory);

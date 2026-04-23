@@ -10,7 +10,6 @@ import { PrismaModule } from './prisma/prisma.module';
     ConfigModule.forRoot({ isGlobal: true }),
     AcademicRegistrationModule,
     PrismaModule,
-
   ],
   controllers: [AppController],
   providers: [AppService],

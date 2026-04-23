@@ -13,11 +13,16 @@ datasource db {
   provider = "postgresql"
 }
 
-model User {
+model UserAcademicRegistration {
   id        Int      @id @default(autoincrement())
   name      String
   password  String
   role      Role     @default(USER)
+
+  studentEnrollments EnrollmentAcademicRegistration[] @relation("StudentEnrollments")
+  lecturerApprovals  EnrollmentAcademicRegistration[] @relation("LecturerApprovals")
+  lecturerCourses    CourseAcademicRegistration[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -27,3 +32,41 @@ enum Role {
   LECTURER
 }
 
+model CourseAcademicRegistration {
+  id          Int      @id @default(autoincrement())
+  name        String
+  code        String   @unique
+  stock       Int
+
+  lecturerId Int
+  lecturer   UserAcademicRegistration @relation(fields: [lecturerId], references: [id])
+
+  enrollments EnrollmentAcademicRegistration[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+enum EnrollmentStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model EnrollmentAcademicRegistration {
+  id         Int      @id @default(autoincrement())
+  studentId  Int
+  courseId   Int
+  lecturerId Int
+
+  status     EnrollmentStatus @default(PENDING)
+
+  student  UserAcademicRegistration   @relation("StudentEnrollments", fields: [studentId], references: [id])
+  course   CourseAcademicRegistration @relation(fields: [courseId], references: [id])
+  lecturer UserAcademicRegistration   @relation("LecturerApprovals", fields: [lecturerId], references: [id])
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([studentId, courseId])
+}
