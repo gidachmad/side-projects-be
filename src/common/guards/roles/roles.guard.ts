@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { CanActivate, ExecutionContext, ForbiddenException, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { Role } from 'generated/prisma/enums';
+import { Role } from '@prisma/client';
 import { Observable } from 'rxjs';
 import { ROLES_KEY } from 'src/modules/academic-registration/auth/decorators/roles.decorator';
 

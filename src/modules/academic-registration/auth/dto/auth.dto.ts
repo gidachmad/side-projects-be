@@ -2,7 +2,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Transform } from "class-transformer";
 import { IsEnum, IsString, MaxLength, MinLength } from "class-validator";
-import { Role } from "generated/prisma/client";
+import { Role } from "@prisma/client";
 
 export default class UserRegistrationDto {
   @ApiProperty({

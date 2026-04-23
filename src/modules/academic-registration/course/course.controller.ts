@@ -4,7 +4,7 @@ import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { RolesGuard } from 'src/common/guards/roles/roles.guard';
-import { Role } from 'generated/prisma/enums';
+import { Role } from '@prisma/client';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
