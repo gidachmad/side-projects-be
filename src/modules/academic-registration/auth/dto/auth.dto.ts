@@ -9,8 +9,8 @@ export default class UserRegistrationDto {
     example: 'asep',
     description: 'The name of the user',
   })
-  @IsString()
   @Transform(({ value }) => value.trim())
+  @IsString()
   name!: string;
 
   @ApiProperty({
@@ -27,8 +27,8 @@ export default class UserRegistrationDto {
     description: 'The role of the user, either USER or LECTURER',
     enum: Role,
   })
-  @IsEnum(Role)
   @Transform(({ value }) => value.trim().toUpperCase())
+  @IsEnum(Role)
   role!: Role;
 } 
 
@@ -37,8 +37,8 @@ export class UserLoginDto {
     example: 'asep',
     description: 'The name of the user',
   })
-  @IsString()
   @Transform(({ value }) => value.trim())
+  @IsString()
   name!: string;
   
   @ApiProperty({
