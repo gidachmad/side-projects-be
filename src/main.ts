@@ -24,7 +24,10 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('Side-Projects-BE')
-    .setDescription('The side projects API description')
+    .setDescription(`
+      This is BackEnd for Regid's Side Projects, It's intended to be used as a backend for multiple of side projects, it contains multiple APIs that are used for different side projects APPs. 
+      
+      Check github repo for more details: https://github.com/gidachmad/side-projects-be`)
     .setVersion('1.0')
     .addBearerAuth()
     .build();

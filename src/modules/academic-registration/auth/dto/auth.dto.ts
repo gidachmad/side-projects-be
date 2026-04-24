@@ -28,6 +28,7 @@ export default class UserRegistrationDto {
     enum: Role,
   })
   @IsEnum(Role)
+  @Transform(({ value }) => value.trim().toUpperCase())
   role!: Role;
 } 
 

@@ -5,8 +5,8 @@ import { UpdateCourseDto } from './dto/update-course.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { RolesGuard } from 'src/common/guards/roles/roles.guard';
 import { Role } from '@prisma/client';
-import { Roles } from '../auth/decorators/roles.decorator';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiRole, Roles } from '../auth/decorators/roles.decorator';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @Controller('academic-registration/course')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -16,6 +16,8 @@ export class CourseController {
 
   @Post('create')
   @Roles(Role.LECTURER)
+  @ApiRole(Role.LECTURER)
+  @ApiTags(Role.LECTURER+` APIs`)
   create(@Req() req: any, @Body() createCourseDto: CreateCourseDto) {
     return this.courseService.create(req.user.id, createCourseDto);
   }
@@ -32,12 +34,16 @@ export class CourseController {
 
   @Patch('edit/:courseId')
   @Roles(Role.LECTURER)
+  @ApiRole(Role.LECTURER)
+  @ApiTags(Role.LECTURER+` APIs`)
   update(@Req() req: any, @Param('courseId') courseId: string, @Body() updateCourseDto: UpdateCourseDto) {
     return this.courseService.update(req.user.id, courseId, updateCourseDto);
   }
 
   @Delete('delete/:courseId')
   @Roles(Role.LECTURER)
+  @ApiRole(Role.LECTURER)
+  @ApiTags(Role.LECTURER+` APIs`)
   remove(@Req() req: any, @Param('courseId') courseId: string) {
     return this.courseService.remove(req.user.id, courseId);
   }

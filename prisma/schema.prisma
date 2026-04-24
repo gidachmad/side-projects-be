@@ -11,11 +11,15 @@ model UserAcademicRegistration {
   name               String
   password           String
   role               Role                             @default(USER)
+
   createdAt          DateTime                         @default(now())
   updatedAt          DateTime                         @updatedAt
+
   lecturerCourses    CourseAcademicRegistration[]
   lecturerApprovals  EnrollmentAcademicRegistration[] @relation("LecturerApprovals")
   studentEnrollments EnrollmentAcademicRegistration[] @relation("StudentEnrollments")
+
+  batches            EnrollmentBatch[]
 }
 
 model CourseAcademicRegistration {
@@ -23,21 +27,26 @@ model CourseAcademicRegistration {
   name        String
   code        String                           @unique
   stock       Int
-  lecturerId  Int
+
   createdAt   DateTime                         @default(now())
   updatedAt   DateTime                         @updatedAt
+  
+  lecturerId  Int
   lecturer    UserAcademicRegistration         @relation(fields: [lecturerId], references: [id])
   enrollments EnrollmentAcademicRegistration[]
 }
 
 model EnrollmentAcademicRegistration {
   id         Int                        @id @default(autoincrement())
+  batchId    Int
   studentId  Int
   courseId   Int
   lecturerId Int
-  status     EnrollmentStatus           @default(PENDING)
+
   createdAt  DateTime                   @default(now())
   updatedAt  DateTime                   @updatedAt
+
+  batch      EnrollmentBatch            @relation(fields: [batchId], references: [id])
   course     CourseAcademicRegistration @relation(fields: [courseId], references: [id])
   lecturer   UserAcademicRegistration   @relation("LecturerApprovals", fields: [lecturerId], references: [id])
   student    UserAcademicRegistration   @relation("StudentEnrollments", fields: [studentId], references: [id])
@@ -45,12 +54,26 @@ model EnrollmentAcademicRegistration {
   @@unique([studentId, courseId])
 }
 
+model EnrollmentBatch {
+  id        Int @id @default(autoincrement())
+
+  studentId Int
+  status    EnrollmentBatchStatus @default(DRAFT)
+
+  student   UserAcademicRegistration @relation(fields: [studentId], references: [id])
+  items     EnrollmentAcademicRegistration[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 enum Role {
   USER
   LECTURER
 }
 
-enum EnrollmentStatus {
+enum EnrollmentBatchStatus {
+  DRAFT
   PENDING
   APPROVED
   REJECTED
